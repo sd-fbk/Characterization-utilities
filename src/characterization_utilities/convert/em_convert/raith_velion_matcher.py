@@ -77,10 +77,7 @@ event_instr_optics = Matcher(
                 'alias': '60000.ProbeCurrent',
                 'unit': 'A',
             },
-            'field_of_view': {
-                'alias': '60000.FoV',
-                'unit': 'm'
-            },
+            'field_of_view': {'alias': '60000.FoV', 'unit': 'm'},
         }
     },
 )
@@ -103,14 +100,7 @@ event_instr_ebeam_scan = Matcher(
         type_class='NXscan_controller',
         is_repeatable=False,
     ),
-    {
-        'fields': {
-            'dwell_time': {
-                'alias': '60000.PixelDwelltime',
-                'unit': 's'
-            }
-        }
-    },
+    {'fields': {'dwell_time': {'alias': '60000.PixelDwelltime', 'unit': 's'}}},
 )
 
 event_instr_ebeam_source = Matcher(

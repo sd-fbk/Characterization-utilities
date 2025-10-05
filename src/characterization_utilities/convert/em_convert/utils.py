@@ -191,7 +191,7 @@ base_matchers = [
     ),
     Matcher(
         SectionHeader(
-            path='./measurement/eventID/',
+            path='./eventID/',
             type_class='NXem_event_data',
             is_repeatable=False,
         ),
