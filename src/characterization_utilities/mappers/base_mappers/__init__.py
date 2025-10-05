@@ -15,12 +15,12 @@ __all__ = ['emapper', 'umapper', 'smapper', 'cmapper']
 
 mapperMenager = {
     'Entry': {'mapper': emapper},
-    'User': {'NX_class': 'NXuser', 'mapper': umapper},
-    'Samplebase': {'NX_class': 'NXsample', 'mapper': smapper},
+    'User': {'NX_class': 'NXuser', 'name': 'user', 'mapper': umapper},
+    'Samplebase': {'NX_class': 'NXsample', 'name': 'sample', 'mapper': smapper},
     'SampleComponentbase': {'NX_class': 'NXsample_component', 'mapper': cmapper},
     'History': {'NX_class': 'NXhistory', 'mapper': {'identifierNAME': 'lab_id'}},
     'ActivityStep': {
         'NX_class': 'NXactivity',
-        'mapper': {'description': ' description', 'start_time': 'start_time'},
+        'mapper': {'description': 'description', 'start_time': 'start_time'},
     },
 }

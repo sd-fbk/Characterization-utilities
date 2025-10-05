@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import h5py
@@ -52,6 +53,15 @@ def verify_if_is_tif(file, logger) -> bool:
         return False
 
 
+def get_json_dict(s: str):
+    """Se s è un JSON valido che rappresenta un dict, ritorna il dict, altrimenti s"""
+    try:
+        obj = json.loads(s)
+    except (ValueError, TypeError):
+        return None
+    return obj if isinstance(obj, dict) else s
+
+
 # This function extracts metadata from each page in the tiff and id needed convert
 # quantities in type hashable or reusable as dictionar values.
 
@@ -60,11 +70,9 @@ def extract_metadata_from_tif_page(tif_page) -> dict:
     mio_dict = {}
     for tag in tif_page.tags:
         try:
-            if (
-                isinstance(tag.value, str)
-                or isinstance(tag.value, float)
-                or isinstance(tag.value, int)
-            ):
+            if isinstance(tag.value, str):
+                mio_dict[tag.name] = get_json_dict(tag.value)
+            elif isinstance(tag.value, float | int):
                 mio_dict[tag.name] = tag.value
             elif isinstance(tag.value, tuple):
                 mio_dict[tag.name] = list(tag.value)

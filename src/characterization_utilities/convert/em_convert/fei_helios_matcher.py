@@ -11,10 +11,11 @@ meas_instrument = Matcher(
     {
         'fields': {
             'name': {'alias': 'FEI_HELIOS.System.SystemType'},
-            'type': {'alias': 'FEI_HELIOS.System.Type'},
+            'type': {'get': (lambda x: 'fib')},
         }
     },
 )
+
 meas_instr_fabr = Matcher(
     SectionHeader(
         path='./instrument/fabrication/',
@@ -163,7 +164,7 @@ event_instr_ebeam_scan = Matcher(
         type_class='NXscan_controller',
         is_repeatable=False,
     ),
-    {'fields': {'dwell_time': {'alias': 'FEI_HELIOS.Scan.Dwelltime'}}},
+    {'fields': {'dwell_time': {'alias': 'FEI_HELIOS.Scan.Dwelltime', 'unit': 's'}}},
 )
 
 meas_instr_ebeam = Matcher(
@@ -278,12 +279,7 @@ meas_instr_ibeam_source = Matcher(
         type_class='NXsource',
         is_repeatable=False,
     ),
-    {
-        'fields': {
-            'emitter_type': {'alias': 'FEI_HELIOS.IBeam.Source'},
-            'type': {'get': (lambda x: 'Ion Source')}
-        }
-    },
+    {'fields': {'type': {'get': (lambda x: 'Ion Source')}}},
 )
 meas_instr_ebeam_source_probe = Matcher(
     SectionHeader(
@@ -384,11 +380,7 @@ event_instr_ibeam_source = Matcher(
         type_class='NXsource',
         is_repeatable=False,
     ),
-    {
-        'fields': {
-            'voltage': {'alias': 'FEI_HELIOS.IBeam.HV', 'unit': 'V'}
-        }
-    },
+    {'fields': {'voltage': {'alias': 'FEI_HELIOS.IBeam.HV', 'unit': 'V'}}},
 )
 event_instr_ibeam_source_probe = Matcher(
     SectionHeader(
@@ -420,7 +412,7 @@ event_instr_ibeam_scan = Matcher(
         type_class='NXscan_controller',
         is_repeatable=False,
     ),
-    {'fields': {'dwell_time': {'alias': 'FEI_HELIOS.Scan.Dwelltime'}}},
+    {'fields': {'dwell_time': {'alias': 'FEI_HELIOS.Scan.Dwelltime', 'unit': 's'}}},
 )
 
 ibeam_matchers = [

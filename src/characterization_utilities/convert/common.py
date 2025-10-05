@@ -84,9 +84,12 @@ def write_data(dati, where, mapper: dict, MM: dict, logger) -> None:
                 if mdef in MM.keys():
                     if 'SubSectionList' in type(val).__name__:
                         new_dati_list = list(val)
-                        for ndati in new_dati_list:
+                        for idx, ndati in enumerate(new_dati_list):
+                            partial_name = MM[mdef].get('name', None)
                             repos = create_group_to_fill(
-                                MM[mdef]['NX_class'], where, ndati.name
+                                MM[mdef]['NX_class'],
+                                where,
+                                f'{partial_name}_{idx}' if partial_name else ndati.name,
                             )
                             write_data(
                                 ndati.__dict__, repos, MM[mdef]['mapper'], MM, logger
