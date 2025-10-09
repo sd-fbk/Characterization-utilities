@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 from nomad.datamodel.metainfo.basesections.v2 import Activity
 from nomad.metainfo import MEnum, Package, Quantity, Section, SubSection
-from schema_packages.fabrication_utilities import FabricationProcessStep
+from schema_packages.fabrication_utilities import Equipment, FabricationProcessStep
 from schema_packages.Items import Item, ItemComponent
 
 # Sample is a particular instance of the Item used in the fabrication workflow.
@@ -142,6 +142,35 @@ class Samplebase(Item):
         section_def=History,
         description='Here you can briefly describe the preparation of the item',
         repeats=False,
+    )
+
+    def normalize(self, archive: 'EntryArchive', logger: 'BoundLogger') -> None:
+        super().normalize(archive, logger)
+
+
+class CharactEquipment(Equipment):
+    m_def = Section(
+        a_eln={
+            'hide': [
+                'datetime',
+            ],
+            'properties': {
+                'order': [
+                    'name',
+                    'lab_id',
+                    'description',
+                    'affiliation',
+                    'institution',
+                    'product_model',
+                    'manufacturer_name',
+                    'inventary_code',
+                    'is_bookable',
+                    'automatic_loading',
+                    'contamination_class',
+                    'notes',
+                ],
+            },
+        }
     )
 
     def normalize(self, archive: 'EntryArchive', logger: 'BoundLogger') -> None:

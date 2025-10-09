@@ -39,19 +39,15 @@ Em_schema_package_entry_point = EmSchemaPackageEntryPoint(
     description='Schemas entry point for electron microscopy to nexus.',
 )
 
-# class CharacterizationEquipmentEntryPoint(SchemaPackageEntryPoint):
-#    def load(self):
-#        from schema_packages.equipments.character_equipment import (
-#            m_package,
-#        )
-#
-#        return m_package
-#
-#
-# Characterization_Equipment_entry_point = CharacterizationEquipmentEntryPoint(
-#    name='Characterization tools',
-#    description="""
-#        Schema package to describe characterization tools used in fabrications to
-#         control process steps.'
-#    """,
-# )
+
+class AfmSchemaPackageEntryPoint(SchemaPackageEntryPoint):
+    def load(self):
+        from characterization_utilities.schema_packages.afm_schema import m_package
+
+        return m_package
+
+
+Afm_schema_package_entry_point = AfmSchemaPackageEntryPoint(
+    name='AfmSchemaPackage',
+    description='Schemas entry point for afm experiment to nexus.',
+)

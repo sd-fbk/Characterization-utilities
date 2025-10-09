@@ -6,7 +6,6 @@
 from datetime import datetime
 
 import h5py
-import numpy as np
 
 from characterization_utilities.mappers import load_mapper_manager
 
@@ -25,29 +24,19 @@ def create_group_to_fill(TYPE, where, name):
 
 
 # Adesso che sappiamo generare i gruppi possiamo in teoria preoccuparci di scrivere
-# le quantità in questi gruppi. Prima però le prossime due funzioni saranno utili. La
-# prima estrae il nome della classe che si legge nelle sottosezioni per poi utilizzarlo
-# nella definizione della classe nexus da usare nella traduzione e quindi per
-# reindirizzare poi al corretto mapping. La seconda invece evrifica se è un campo da
-# scrivere come dataset nel nexus.
+# le quantità in questi gruppi. Prima però le prossima funzione sarà utile per estrarre
+# dall'archivio le quantità con il loro valore e l'unità di misura relativa.
 
 
-def get_real_mdef(obj: str) -> str:
-    old_key = f'{obj}'
-    if ':' in str(old_key):
-        new_key = str(old_key).split(':', 1)[1]
-    else:
-        new_key = str(old_key)
-    return new_key.split('(', 1)[0]
-
-
-def is_a_field(value) -> bool:
-    if np.isscalar(value):
-        return True
-    elif isinstance(value, str | datetime):
-        return True
-    else:
-        return False
+def extract_values_with_units(section):
+    results = {}
+    for name, qdef in section.m_def.all_quantities.items():
+        if section.m_is_set(name):
+            results[name] = {
+                'value': section.m_get(name),
+                'unit': getattr(qdef, 'unit', None),
+            }
+    return results
 
 
 # Questa funzione ci permette di scrivere correttamente i dati dalla struttura ad
@@ -65,44 +54,48 @@ def is_a_field(value) -> bool:
 # dal mapper menager e richiamare la giusta routine di mapping.
 
 
-def write_data(dati, where, mapper: dict, MM: dict, logger) -> None:
-    for el in dati:
-        val = dati[el]
-        if val is not None:
-            if is_a_field(val):
-                if el in mapper:
-                    if isinstance(val, datetime):
-                        val = str(val)
-                        where.create_dataset(mapper[el], data=val, dtype=dt)
-                    elif isinstance(val, str) and ('<p>' in val or '</p>' in val):
-                        val = val.replace('<p>', '').replace('</p>', '')
-                        where.create_dataset(mapper[el], data=val)
-                    else:
-                        where.create_dataset(mapper[el], data=val)
-            elif not el.startswith('m_'):
-                mdef = get_real_mdef(val)
-                if mdef in MM.keys():
-                    if 'SubSectionList' in type(val).__name__:
-                        new_dati_list = list(val)
-                        for idx, ndati in enumerate(new_dati_list):
-                            partial_name = MM[mdef].get('name', None)
-                            repos = create_group_to_fill(
-                                MM[mdef]['NX_class'],
-                                where,
-                                f'{partial_name}_{idx}' if partial_name else ndati.name,
-                            )
-                            write_data(
-                                ndati.__dict__, repos, MM[mdef]['mapper'], MM, logger
-                            )
-                    elif type(val).__name__.endswith(mdef):
-                        repos = create_group_to_fill(MM[mdef]['NX_class'], where, el)
-                        write_data(val.__dict__, repos, MM[mdef]['mapper'], MM, logger)
+def write_data(data_archive, where, mapper: dict, MM: dict, logger) -> None:
+    vals = extract_values_with_units(data_archive)
+    for k, v in vals.items():
+        val = v['value']
+        unit = v['unit']
+        if k in mapper:
+            if isinstance(val, datetime):
+                val = str(val)
+                where.create_dataset(mapper[k], data=val, dtype=dt)
+            elif isinstance(val, str) and ('<p>' in val or '</p>' in val):
+                val = val.replace('<p>', '').replace('</p>', '')
+                where.create_dataset(mapper[k], data=val)
+            else:
+                where.create_dataset(mapper[k], data=val)
+                if unit is not None:
+                    where[mapper[k]].attrs['units'] = str(unit)
+    for name, sub_def in data_archive.m_def.all_sub_sections.items():
+        subsections = data_archive.m_get_sub_sections(sub_def)
+        if not subsections:
+            continue
+
+        cls_name = sub_def.sub_section.section_cls.__name__
+        if cls_name not in MM.keys():
+            continue
+
+        sub_mapper = MM[cls_name]['mapper']
+        partial_name = MM[cls_name].get('name', None)
+        nx_class = MM[cls_name].get('NX_class', None)
+
+        for i, sub in enumerate(subsections):
+            if sub is None:
+                continue
+            subgrp = create_group_to_fill(
+                nx_class, where, f'{partial_name}_{i}' if partial_name else name
+            )
+            write_data(sub, subgrp, sub_mapper, MM, logger)
 
 
 # Funzione che richiama la precedente e che crea davvero il nexus generandone l'entry.
 
 
-def instanciate_nexus(output_file, dati, nxdl: str, logger) -> None:
+def instanciate_nexus(output_file, data_archive, nxdl: str, logger) -> None:
     # carico il manager giusto
     MM = load_mapper_manager(nxdl)
     # l’entry mapper lo prendo dal manager
@@ -114,8 +107,8 @@ def instanciate_nexus(output_file, dati, nxdl: str, logger) -> None:
         entry = f.create_group('entry')
         entry.attrs['NX_class'] = 'NXentry'
         entry.create_dataset('definition', data=nxdl)
-        if dati is not None:
-            write_data(dati, entry, entry_mapper, MM, logger)
+        if data_archive is not None:
+            write_data(data_archive, entry, entry_mapper, MM, logger)
 
 
 # Supporto quantità vettoriali rimosso da rivedere

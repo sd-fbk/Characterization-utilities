@@ -13,7 +13,7 @@ from characterization_utilities.mappers.base_mappers.user_mapper import (
 
 __all__ = ['emapper', 'umapper', 'smapper', 'cmapper']
 
-mapperMenager = {
+mapperManager = {
     'Entry': {'mapper': emapper},
     'User': {'NX_class': 'NXuser', 'name': 'user', 'mapper': umapper},
     'Samplebase': {'NX_class': 'NXsample', 'name': 'sample', 'mapper': smapper},

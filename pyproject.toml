@@ -123,6 +123,7 @@ dataconverter_entry_point = "characterization_utilities.schema_packages:Dataconv
 ## Specific technique entry points
 
 em_schema_package_entry_point = "characterization_utilities.schema_packages:Em_schema_package_entry_point"
+afm_schema_package_entry_point = "characterization_utilities.schema_packages:Afm_schema_package_entry_point"
 
 #app_entry_point = "characterization_utilities.apps:app_entry_point"
 

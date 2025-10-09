@@ -6,7 +6,7 @@ def load_mapper_manager(output_type: str):
     Carica dinamicamente il dizionario mapperMenager
     dal pacchetto corretto (es. em_mappers, afm_mappers, ...).
 
-    output_type: stringa tipo 'NXem' o 'NXafm'
+    output_type: stringa tipo 'NXem' o 'NXafm' o altri
     """
     # mappatura tra output_type e package
     type_to_package = {
@@ -21,4 +21,4 @@ def load_mapper_manager(output_type: str):
     module_path = type_to_package[output_type]
     module = importlib.import_module(module_path)
 
-    return getattr(module, 'mapperMenager', None)
+    return getattr(module, 'mapperManager', None)

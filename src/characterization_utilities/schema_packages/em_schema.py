@@ -157,8 +157,8 @@ class EmStepConverter(CharacterizationStepConverter, CharacterizationStep):
         if self.output:
             output_file = os.path.join(raw_path, self.output)
             if self.nxdl:
-                list_dict = archive.data.__dict__
-                instanciate_nexus(output_file, list_dict, self.nxdl, logger)
+                data_archive = archive.data
+                instanciate_nexus(output_file, data_archive, self.nxdl, logger)
                 if files_list is not None and len(files_list) > 0:
                     for file in files_list:
                         to_write = os.path.join(raw_path, file)
