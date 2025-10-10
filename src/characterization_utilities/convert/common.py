@@ -9,7 +9,7 @@ import h5py
 
 from characterization_utilities.mappers import load_mapper_manager
 
-# Definizione utile per la scritture dei datetimes
+# Definizione utile per la scritture dei datetimess
 
 dt = h5py.string_dtype(encoding='utf-8')
 
@@ -53,7 +53,11 @@ def extract_values_with_units(section):
 # caso una volta ottenuto il tipo lo usiamo per ottenere la classe NeXus corrispondente
 # dal mapper menager e richiamare la giusta routine di mapping.
 
-
+#data_archive: il file che analizziamo per poi estrarre dati e costruire il nexus
+#where: il gruppo hdf5 in cui scrivere i dati
+#mapper: il dizionario che mappa i nomi delle quantità NOMAD con quelli NeXus
+#MM: il mapper manager che contiene tutti i mapper per le varie sezioni
+#logger: il logger per eventuali messaggi di debug o errore
 def write_data(data_archive, where, mapper: dict, MM: dict, logger) -> None:
     vals = extract_values_with_units(data_archive)
     for k, v in vals.items():
