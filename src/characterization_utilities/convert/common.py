@@ -26,7 +26,7 @@ def create_group_to_fill(TYPE, where, name):
 # Adesso che sappiamo generare i gruppi possiamo in teoria preoccuparci di scrivere
 # le quantità in questi gruppi. Prima però le prossima funzione sarà utile per estrarre
 # dall'archivio le quantità con il loro valore e l'unità di misura relativa.
-
+#let's try again with commit
 
 def extract_values_with_units(section):
     results = {}
