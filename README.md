@@ -1,5 +1,5 @@
 # characterization_utilities
-
+# update 7 november 2025
 Plugin to standardize proprietary data formats in NeXuS
 
 This `nomad` plugin was generated with `Cookiecutter` along with `@nomad`'s [`cookiecutter-nomad-plugin`](https://github.com/FAIRmat-NFDI/cookiecutter-nomad-plugin) template.
