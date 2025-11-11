@@ -12,13 +12,14 @@ def load_matchers(tag_list: list, metadata: dict, logger: 'BoundLogger') -> list
     Carica dinamicamente il corretto array di matchers in base allo strumento
     da cui i dati provengono.
     """
-    tag_finder = {50431: 'NISABA', 34682: 'HELIOS', 60000: 'VELION'}
+    #warning: the code of the thermofisher is fake, to be manually changed during tests
+    tag_finder = {50431: 'NISABA', 34682: 'HELIOS', 60000: 'VELION', 34683:'THERMOFISHER'}
 
     type_to_package = {
         'HELIOS': 'characterization_utilities.convert.em_convert.fei_helios_matcher',
         'NISABA': 'characterization_utilities.convert.em_convert.tescan_matcher',
         'VELION': 'characterization_utilities.convert.em_convert.raith_velion_matcher',
-        # aggiungi altri qui
+        'THERMOFISHER':'characterization_utilities.convert.em_convert.thermofisher_matcher',
     }
 
     def search_flag_for_matchers(tag_list: list, logger) -> str | None:

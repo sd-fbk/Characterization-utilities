@@ -1,12 +1,13 @@
 # Introduction
 
-The goal of this example is to show how, through the *Characterization-utilities* plugin, it is possible to describe either a simple or complex sem expriment.
+The goal of this example is to show how, through the *Characterization-utilities* plugin, it is possible to describe either a simple or complex SEM experiment.
 
 ## Explanation
 
-The uploads is based upon two main classes. The `CharacterizationStep` contains all the nedded minamal parameters needed to describe a characterization experiment according to the CHADA instructions and it is built upon the `FabricationProcessStep` from *Fabrication-utilities*.
+The uploads is based upon two main classes. 
+The `CharacterizationStep` contains all the minamal parameters needed to describe a characterization experiment according to the CHADA instructions and it is built upon the `FabricationProcessStep` from *Fabrication-utilities*.
 This class consist in a description of general parameters to make the experiment findable, a repeatable section containing the users involved in the experiment, and another repeatable section consisting in the description of a sample and its components.
-Moreover, according to CHADA, the sample sections allow a description of the process used to obtain the sample, starting from the initial awfer or in general item. This quantitites are mapped to the corresponding NeXus fileds and groups automatically.
+Moreover, according to CHADA, the sample sections allow a description of the process used to obtain the sample, starting from the initial wafer or in general item. This quantitites are mapped to the corresponding NeXus fileds and groups automatically.
 Finally the other crucial class is the `CharacterizationStepConverter` which allows to parse the input raw data files into the new NeXus entry. In the particular case of the electron microscopy schema explored here, the preferred raw data files are tiff files. The program will extract all metadata present in the image and they will be written into the NeXus. At the moment the program support TIFF coming from:
 
 - FEI_HELIOS
